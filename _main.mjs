@@ -10,7 +10,7 @@ const tag = json.map((x) => x.version).find((x) => x.startsWith("go1."));
 const version = tag.slice(2);
 const DEST = join(process.env.RUNNER_TOOL_CACHE, "go", version, process.arch);
 if (!existsSync(DEST)) {
-  await mkdir(DEST);
+  await mkdir(DEST, { recursive: true });
   const platform = {
     darwin: "darwin",
     linux: "linux",
