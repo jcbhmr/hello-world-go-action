@@ -33,7 +33,7 @@ if (!existsSync(DEST)) {
     );
     await once(subprocess1, "exit");
   } else {
-    const subprocess2 = spawn("tar", ["-f", SRC, "-C", DEST]);
+    const subprocess2 = spawn("tar", ["-xzf", SRC, "-C", DEST]);
     await once(subprocess2, "exit");
   }
 }
