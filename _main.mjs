@@ -26,14 +26,14 @@ if (!existsSync(DEST)) {
   const response2 = await fetch(`https://go.dev/dl/${filename}`);
   const SRC = join(DEST, filename);
   await pipeline(response2.body, createWriteStream(SRC));
-  if (filename.endsWith(".zip")) {
-    const subprocess1 = spawn("tar", ["-f", SRC, "-C", DEST]);
-    await once(subprocess1, "exit");
-  } else {
-    const subprocess2 = spawn(
+  if (process.platform === "windows" && filename.endsWith(".zip")) {
+    const subprocess1 = spawn(
       `Expand-Archive -LiteralPath $Env:SRC -DestinationPath $Env:DEST`,
       { shell: "powershell", env: { ...process.env, SRC, DEST } }
     );
+    await once(subprocess1, "exit");
+  } else {
+    const subprocess2 = spawn("tar", ["-f", SRC, "-C", DEST]);
     await once(subprocess2, "exit");
   }
 }
