@@ -2,15 +2,21 @@ import { spawn } from "node:child_process";
 import { once } from "node:events";
 import { join, dirname } from "node:path";
 import { existsSync, createWriteStream } from "node:fs";
-import { mkdir } from "node:fs/promises";
+import { mkdir, rename } from "node:fs/promises";
 import { pipeline } from "node:stream/promises";
 const file = join(dirname(process.argv[1]), "main.go"); // 👈 CHANGE ME!
 const response1 = await fetch("https://go.dev/dl/?mode=json&include=all");
 const json = await response1.json();
 const tag = json.map((x) => x.version).find((x) => x.startsWith("go1."));
 const version = tag.slice(2);
-const DEST = join(process.env.RUNNER_TOOL_CACHE, "go", version, process.arch);
-if (!existsSync(DEST)) {
+const install = join(
+  process.env.RUNNER_TOOL_CACHE,
+  "go",
+  version,
+  process.arch
+);
+if (!existsSync(install)) {
+  const DEST = join(process.env.RUNNER_TEMP, tag);
   await mkdir(DEST, { recursive: true });
   const platform = {
     darwin: "darwin",
@@ -36,8 +42,9 @@ if (!existsSync(DEST)) {
     const subprocess2 = spawn("tar", ["-xzf", SRC, "-C", DEST]);
     await once(subprocess2, "exit");
   }
+  await rename(join(DEST, "go"), install);
 }
-const subprocess3 = spawn(join(DEST, "go", "bin", "go"), ["run", file], {
+const subprocess3 = spawn(join(install, "bin", "go"), ["run", file], {
   stdio: "inherit",
 });
 await once(subprocess3, "spawn");

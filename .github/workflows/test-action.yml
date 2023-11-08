@@ -8,9 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-go@v4
-      - run: tree -a /opt/hostedtoolcache/go/
-      # - id: main
-      #   uses: ./
-      # - shell: cat {0}
-      #   run: ${{ toJSON(steps.main.outputs) }}
+      - id: main
+        uses: ./
+      - shell: cat {0}
+        run: ${{ toJSON(steps.main.outputs) }}
