@@ -42,6 +42,7 @@ if (!existsSync(install)) {
     const subprocess2 = spawn("tar", ["-xzf", SRC, "-C", DEST]);
     await once(subprocess2, "exit");
   }
+  await mkdir(join(install, ".."), { recursive: true });
   await rename(join(DEST, "go"), install);
 }
 const subprocess3 = spawn(join(install, "bin", "go"), ["run", file], {
