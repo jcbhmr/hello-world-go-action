@@ -32,21 +32,21 @@ if (!existsSync(install)) {
   const response2 = await fetch(`https://go.dev/dl/${filename}`);
   const SRC = join(DEST, filename);
   await pipeline(response2.body, createWriteStream(SRC));
+  let process1;
   if (process.platform === "windows" && filename.endsWith(".zip")) {
-    const subprocess1 = spawn(
+    subprocess1 = spawn(
       `Expand-Archive -LiteralPath $Env:SRC -DestinationPath $Env:DEST`,
       { shell: "powershell", env: { ...process.env, SRC, DEST } }
     );
-    await once(subprocess1, "exit");
   } else {
-    const subprocess2 = spawn("tar", ["-xzf", SRC, "-C", DEST]);
-    await once(subprocess2, "exit");
+    subprocess1 = spawn("tar", ["-xzf", SRC, "-C", DEST]);
   }
+  await once(subprocess1, "exit");
   await mkdir(join(install, ".."), { recursive: true });
   await rename(join(DEST, "go"), install);
 }
-const subprocess3 = spawn(join(install, "bin", "go"), ["run", file], {
+const subprocess2 = spawn(join(install, "bin", "go"), ["run", file], {
   stdio: "inherit",
 });
-await once(subprocess3, "spawn");
-subprocess3.on("exit", (x) => process.exit(x));
+await once(subprocess2, "spawn");
+subprocess2.on("exit", (x) => process.exit(x));
