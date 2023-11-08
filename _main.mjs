@@ -32,7 +32,7 @@ if (!existsSync(install)) {
   const response2 = await fetch(`https://go.dev/dl/${filename}`);
   const SRC = join(DEST, filename);
   await pipeline(response2.body, createWriteStream(SRC));
-  let process1;
+  let subprocess1;
   if (process.platform === "windows" && filename.endsWith(".zip")) {
     subprocess1 = spawn(
       `Expand-Archive -LiteralPath $Env:SRC -DestinationPath $Env:DEST`,
