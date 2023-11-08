@@ -37,8 +37,8 @@ if (!existsSync(DEST)) {
     await once(subprocess2, "exit");
   }
 }
-const subprocess3 = spawn(join(DEST, "go", "bin", "go"), ["run", file], {
-  stdio: "inherit",
-});
-await once(subprocess3, "spawn");
-subprocess3.on("exit", (x) => process.exit(x));
+// const subprocess3 = spawn(join(DEST, "go", "bin", "go"), ["run", file], {
+//   stdio: "inherit",
+// });
+// await once(subprocess3, "spawn");
+// subprocess3.on("exit", (x) => process.exit(x));

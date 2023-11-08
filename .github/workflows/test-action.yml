@@ -12,3 +12,4 @@ jobs:
         uses: ./
       - shell: cat {0}
         run: ${{ toJSON(steps.main.outputs) }}
+      - run: tree -a /opt/hostedtoolcache/go/1.21.4/x64/
