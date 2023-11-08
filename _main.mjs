@@ -4,7 +4,7 @@ import { join, dirname } from "node:path";
 import { existsSync, createWriteStream } from "node:fs";
 import { mkdir } from "node:fs/promises";
 import { pipeline } from "node:stream/promises";
-const file = join(dirname(process.argv[1]), "main.ts"); // 👈 CHANGE ME!
+const file = join(dirname(process.argv[1]), "main.go"); // 👈 CHANGE ME!
 const response1 = await fetch("https://go.dev/dl/?mode=json&include=all");
 const json = await response1.json();
 const tag = json.map((x) => x.version).find((x) => x.startsWith("go1."));
