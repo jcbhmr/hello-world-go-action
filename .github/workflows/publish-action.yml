@@ -1,13 +1,13 @@
-name: publish-action
 on:
   release:
     types: released
 jobs:
   publish-action:
-    permissions:
-      contents: write
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/publish-action@v0.2.2
-        with:
-          source-tag: ${{ github.event.release.tag_name }}
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+      - run: go run ./task/buildx
+      - uses: jcbhmr/configure-executable-action@v1
+      - uses: actions4git/add-commit-push@v1
+      - uses: actions4gh/publish-action@v1
